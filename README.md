@@ -81,7 +81,7 @@ spotify-wrapped-analysis/\
 │   └── 05_lyrics_theme_analysis.ipynb\
 │ \
 ├── src/            \
-│   ├── __init__.py
+│   ├── __init__.py \
 │   ├── data_ingestion/ \
 │   │   ├── spotify_client.py     \
 │   │   └── fetch_data.py          \
@@ -125,7 +125,7 @@ spotify-wrapped-analysis/\
 └── docker/          \
     ├── Dockerfile.api    \
     ├── Dockerfile.ml      \
-    └── Dockerfile.dash     \
+    └── Dockerfile.dash     
 
 <br>
 
@@ -222,3 +222,100 @@ Open and run each notebook:
 
 ### Full Data Pipeline
 
+**For implementing a complete pipeline at once**
+
+This will clean, merge, engineer, train, forecast, and build the RAG index end-to-end:
+
+  ```bash
+  python scripts/run_data_pipeline.py
+  ```
+
+*Or*
+
+if you want to orchestrate all steps as one:
+
+  ```bash
+  chmod +x scripts/run_data_pipeline.py
+  ./scripts/run_data_pipeline.py
+  ```
+
+**For implementing each file step-by-step**
+
+After ingesting the data, we run the following commands:
+-
+  ```bash
+  python -m src.preprocessing.clean_audio_features
+  ```
+-
+  ```bash
+  python scripts/assemble_wrapped_tracks.py
+  ```
+-
+  ```bash
+  python -m src.preprocessing.merge_lyrics_topics
+  ```
+-
+  ```bash
+  Get-ChildItem .\data\processed\tracks_with_topics.csv
+  Get-ChildItem .\data\processed\tracks_with_topics.csv -TotalCount 5
+  ```
+-
+  ```bash
+  python -m src.features.audio_feature_engineering
+  ```
+-
+  ```bash
+  Get-ChildItem .\data\processed\audio_features_engineered.csv
+  Get-Content .\data\processed\audio_features_engineered.csv -TotalCount 5
+  ```
+-
+  ```bash
+  python -m src.features.lyrical_feature_engineering
+  ```
+-
+  ```bash
+  Get-Content .\data\features\lyrics_features.csv -TotalCount 5
+  ```
+-
+  ```bash
+  python -m src.models.genre_classifier
+  ```
+-
+  ```bash
+  python -m src.models.popularity_predictor
+  ```
+-
+  ```bash
+  python -m src.models.time_series_forecast
+  ```
+-
+  ```bash
+  pip install sentence-transformer
+  ```
+-
+  ```bash
+  python -m src.rag_chat.indexer --max_docs 0
+  python -m src.rag_chat.indexer --max_docs 10 --local_embeddings
+  python -m src.rag_chat.indexer --pattern "recently_played_*.json" --max_docs 100 --local_embeddings
+  ```
+-
+  ```bash
+  uvicorn src.rag_chat.chat_interface:app --reload --port 8000
+  ```
+- Paste this in your browser
+  ```bash
+   http://127.0.0.1:8000/docs
+  ```
+-
+  ```bash
+  streamlit run dashboards/demo_app.py
+  ```
+-
+  ```bash
+  streamlit run dashboards/wrapped_app.py
+  ```
+-
+  ```bash
+  chmod +x scripts/run_dashboard.sh
+  ./scripts/run_dashboard.sh
+  ```
