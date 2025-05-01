@@ -10,7 +10,7 @@ import joblib
 
 from src.preprocessing.utils import get_project_root
 
-# Configure logger
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s ▶ %(message)s"
@@ -19,29 +19,22 @@ logger = logging.getLogger(__name__)
 
 
 def load_data(path: Path) -> pd.DataFrame:
-    """
-    Load the full track dataset with popularity labels.
-    Expects `popularity` column plus audio-feature columns.
-    """
+    
     logger.info("Loading popularity data from %s", path)
     df = pd.read_csv(path)
-    # Drop rows missing popularity
+
     df = df.dropna(subset=["popularity"])
     return df
 
 
 def preprocess(df: pd.DataFrame):
-    """
-    Extract features X and target y:
-      - Features: audio features + explicit flag
-      - Target: popularity (0–100)
-    """
+    
     feature_cols = [
         "danceability", "energy", "loudness", "speechiness",
         "acousticness", "instrumentalness", "liveness",
         "valence", "tempo", "duration_ms", "mode"
     ]
-    # If explicit exists, convert bool→int
+
     if "explicit" in df.columns:
         df["explicit_flag"] = df["explicit"].astype(int)
         feature_cols.append("explicit_flag")
@@ -57,16 +50,16 @@ def train_and_save():
     model_dir = root / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1) Load & preprocess
+
     df = load_data(data_path)
     X, y = preprocess(df)
 
-    # 2) Train/test split
+
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # 3) Grid-search RandomForestRegressor
+
     param_grid = {
         "n_estimators": [100, 200],
         "max_depth": [None, 10, 20]
@@ -78,14 +71,14 @@ def train_and_save():
     best_reg = gs.best_estimator_
     logger.info("Best params: %s", gs.best_params_)
 
-    # 4) Evaluation
+
     y_pred = best_reg.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
     logger.info("Test RMSE: %.3f", rmse)
     logger.info("Test R2: %.3f", r2)
 
-    # 5) Save model
+
     out_file = model_dir / "popularity_predictor_v1.pkl"
     joblib.dump(best_reg, out_file)
     logger.info("Saved popularity predictor to %s", out_file)

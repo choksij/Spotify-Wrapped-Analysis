@@ -9,15 +9,13 @@ def histogram(
     title: str,
     nbins: int = 20
 ) -> px.histogram:
-    """
-    Create a Plotly histogram of `column` with `nbins` bins.
-    """
+
     fig = px.histogram(
         df,
         x=column,
         nbins=nbins,
         title=title,
-        marginal="box"  # show a boxplot on the side
+        marginal="box"  
     )
     fig.update_layout(margin=dict(l=40, r=40, t=50, b=40))
     return fig
@@ -30,10 +28,7 @@ def time_series_line(
     title: str,
     freq: str = None
 ) -> px.line:
-    """
-    Plot a time series line. If `freq` is provided (e.g. 'W' or 'M'),
-    resample the data first by summing `value_col`.
-    """
+    
     ts = df.copy()
     ts[date_col] = pd.to_datetime(ts[date_col])
     ts = ts.set_index(date_col)
@@ -60,10 +55,7 @@ def bar_categories(
     top_n: int = 10,
     title: str = None
 ) -> px.bar:
-    """
-    Plot counts (or aggregated `value_col`) for top N categories in `category_col`.
-    If `value_col` is None, counts are used.
-    """
+    
     if value_col:
         agg = df.groupby(category_col)[value_col].sum()
     else:
@@ -91,11 +83,7 @@ def sunburst_hierarchy(
     values: Union[str, None] = None,
     title: str = None
 ) -> px.sunburst:
-    """
-    Sunburst chart for hierarchical data: `path` is a list of column names
-    defining the hierarchy (e.g. ["genre", "month"]).
-    `values` can be a column to sum, or omitted for counts.
-    """
+    
     fig = px.sunburst(
         df,
         path=path,

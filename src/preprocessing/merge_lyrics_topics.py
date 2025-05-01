@@ -14,9 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def clean_text(s: str) -> str:
-    """
-    Lowercase, strip punctuation, collapse whitespace.
-    """
+    
     if pd.isna(s):
         return ""
     s = s.lower()
@@ -25,9 +23,7 @@ def clean_text(s: str) -> str:
 
 
 def load_lyrics_topics(raw_dir: Path) -> pd.DataFrame:
-    """
-    Load the tcc_ceds_music.csv file, rename key columns.
-    """
+    
     path = raw_dir / "tcc_ceds_music.csv"
     df = read_df_csv(path)
     logger.info("Loaded lyrics-topic data (%d rows)", len(df))
@@ -47,11 +43,8 @@ def merge_with_topics(
     artist_col: str = "artist",
     track_col: str = "track"
 ) -> pd.DataFrame:
-    """
-    Left-join `df_base` (which must have `artist` & `track` columns)
-    to `df_topics` on cleaned artist & track names, filling missing topic scores.
-    """
-    # Prepare clean keys
+    
+
     df_base = df_base.copy()
     df_base["artist_clean"] = df_base[artist_col].astype(str).apply(clean_text)
     df_base["track_clean"] = df_base[track_col].astype(str).apply(clean_text)
@@ -60,13 +53,13 @@ def merge_with_topics(
     df_topics["artist_clean"] = df_topics["artist"].astype(str).apply(clean_text)
     df_topics["track_clean"] = df_topics["track"].astype(str).apply(clean_text)
 
-    # Identify topic score columns (all numeric cols besides artist/track/release_year)
+
     topic_cols = [
         col for col in df_topics.columns
         if col not in {"artist", "track", "artist_clean", "track_clean", "release_year", "genre", "lyrics"}
     ]
 
-    # Merge
+
     df_merged = pd.merge(
         df_base,
         df_topics[["artist_clean", "track_clean"] + topic_cols],
@@ -74,10 +67,10 @@ def merge_with_topics(
         how="left"
     )
 
-    # Drop helper columns
+
     df_merged = df_merged.drop(columns=["artist_clean", "track_clean"])
 
-    # Fill missing topic scores with 0
+
     df_merged[topic_cols] = df_merged[topic_cols].fillna(0)
 
     logger.info(
@@ -92,18 +85,18 @@ def main():
     interim_dir = root / "data" / "interim"
     processed_dir = root / "data" / "processed"
 
-    # Load your base DataFrame (e.g. a combined track list with artist & track)
+
     base_path = interim_dir / "wrapped_tracks.csv"
     if not base_path.exists():
         logger.error("%s not found—run your track-collection step first", base_path)
         return
     df_base = read_df_csv(base_path)
 
-    # Load the lyrics-topic data
+
     raw_lyrics_dir = root / "data" / "raw" / "dataset5_lyrics"
     df_topics = load_lyrics_topics(raw_lyrics_dir)
 
-    # Merge & save
+
     df_enriched = merge_with_topics(
         df_base,
         df_topics,

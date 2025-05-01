@@ -6,10 +6,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# Assumes fetch_data.py lives in src/data_ingestion
+
 from spotify_client import SpotifyClient
 
-# Configure logging
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s ▶ %(message)s"

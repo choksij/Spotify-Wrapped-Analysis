@@ -9,22 +9,22 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.schema import Document
 
-# ─── Logging ────────────────────────────────────────────────────────────────
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s ▶ %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-# ─── FastAPI App ────────────────────────────────────────────────────────────
+
 app = FastAPI(title="Spotify Wrapped RAG Chat (Local Embeddings Only)")
 
-# ─── Redirect root “/” to Swagger UI (/docs) ─────────────────────────────────
+
 @app.get("/", include_in_schema=False)
 def home():
     return RedirectResponse(url="/docs")
 
-# ─── Load Vector Store & Retriever ─────────────────────────────────────────
+
 root = Path(__file__).resolve().parents[2]
 index_dir = root / "data" / "processed" / "rag_index"
 
@@ -32,7 +32,7 @@ if not index_dir.exists():
     logger.error("RAG index not found at %s. Run indexer first.", index_dir)
     raise RuntimeError(f"Index directory missing: {index_dir}")
 
-# ─── Use your SBERT model for query embeddings ───────────────────────────────
+
 EMBED_MODEL = "all-MiniLM-L6-v2"
 logger.info("Loading local SBERT embeddings (%s)", EMBED_MODEL)
 embeddings = SentenceTransformerEmbeddings(model_name=EMBED_MODEL)
@@ -42,7 +42,7 @@ vectorstore = Chroma(
     embedding_function=embeddings
 )
 
-# ─── Build retriever & simple “QA” chain (just returns docs) ─────────────────
+
 retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
 class ChatRequest(BaseModel):
@@ -56,11 +56,11 @@ class ChatResponse(BaseModel):
 def chat(q: str = Query(..., description="Your question about your listening history")):
     logger.info("Received chat query: %s", q)
     try:
-        # Get top-k docs via purely-local embeddings + Chroma
+
         docs = retriever.get_relevant_documents(q)
         if not docs:
             return ChatResponse(query=q, answer="No matching history found.")
-        # Return the raw snippets as “answer”
+
         snippets = "\n\n".join(f"- {d.page_content}" for d in docs)
         return ChatResponse(query=q, answer=snippets)
     except Exception as e:

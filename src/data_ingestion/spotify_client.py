@@ -7,7 +7,7 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from spotipy.exceptions import SpotifyException
 
-# Configure module‐level logger
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s ▶ %(message)s"
@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class SpotifyClient:
-    """
-    Wrapper around spotipy.Spotify for common user‐data ingestion tasks.
-    """
+    
 
     def __init__(
         self,
@@ -68,9 +66,7 @@ class SpotifyClient:
         limit: int = 50,
         offset: int = 0
     ) -> Dict[str, Any]:
-        """
-        Fetch the user’s top tracks or artists.
-        """
+        
         assert item_type in ("tracks", "artists")
         logger.info(
             "Fetching top %s (range=%s, limit=%d, offset=%d)",
@@ -89,9 +85,7 @@ class SpotifyClient:
         after: Optional[int] = None,
         before: Optional[int] = None
     ) -> Dict[str, Any]:
-        """
-        Fetch the user’s recently played tracks.
-        """
+        
         logger.info("Fetching recently played (limit=%d, after=%s, before=%s)",
                     limit, after, before)
         try:
@@ -107,9 +101,7 @@ class SpotifyClient:
         limit: int = 50,
         offset: int = 0
     ) -> Dict[str, Any]:
-        """
-        Fetch the user’s “Liked Songs” library.
-        """
+        
         logger.info("Fetching saved tracks (limit=%d, offset=%d)", limit, offset)
         try:
             return self.sp.current_user_saved_tracks(limit=limit, offset=offset)
@@ -122,9 +114,7 @@ class SpotifyClient:
         limit: int = 50,
         offset: int = 0
     ) -> Dict[str, Any]:
-        """
-        Fetch playlists owned/followed by the user.
-        """
+        
         logger.info("Fetching user playlists (limit=%d, offset=%d)", limit, offset)
         try:
             return self.sp.current_user_playlists(limit=limit, offset=offset)
@@ -138,9 +128,7 @@ class SpotifyClient:
         limit: int = 100,
         offset: int = 0
     ) -> Dict[str, Any]:
-        """
-        Fetch items in a specific playlist.
-        """
+        
         logger.info(
             "Fetching tracks for playlist %s (limit=%d, offset=%d)",
             playlist_id, limit, offset
@@ -158,7 +146,7 @@ class SpotifyClient:
             tokinfo = self.sp_client._auth_manager.get_cached_token()
             access_token = tokinfo["access_token"]
         except Exception:
-            # older versions support as_dict=False
+            
             access_token = self.sp_client._auth_manager.get_access_token(as_dict=False)
         headers = {"Authorization": f"Bearer {access_token}"}
 

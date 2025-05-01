@@ -1,5 +1,4 @@
 {
-    // Extensions recommended for anyone who opens this project
     "recommendations": [
         "ms-python.python",
         "ms-python.vscode-pylance",

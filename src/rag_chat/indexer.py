@@ -9,11 +9,10 @@ from langchain.vectorstores import Chroma
 
 from src.preprocessing.utils import get_project_root, read_json_dir
 
-# ─── Constants ───────────────────────────────────────────────────────────────
-# A small, purely-local SBERT model
+
 DEFAULT_LOCAL_EMBED = "all-MiniLM-L6-v2"
 
-# ─── Logging ────────────────────────────────────────────────────────────────
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s ▶ %(message)s"
@@ -22,10 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_recently_played_docs(raw_dir: Path, pattern: str) -> List[Document]:
-    """
-    Read all JSON files matching `pattern` in raw_dir,
-    flatten them into Document objects with metadata.
-    """
+    
     blobs = read_json_dir(raw_dir, pattern=pattern)
     docs: List[Document] = []
     for blob in blobs:
@@ -50,9 +46,7 @@ def index_documents(
     persist_directory: Path,
     embedding_model: Union[OpenAIEmbeddings, SentenceTransformerEmbeddings]
 ) -> None:
-    """
-    Embed and persist a Chroma vector store from the given documents.
-    """
+    
     persist_directory.mkdir(parents=True, exist_ok=True)
 
     if not docs:
@@ -75,13 +69,13 @@ def main(pattern: str, max_docs: Optional[int], use_local: bool):
     processed_dir = root / "data" / "processed"
     index_dir = processed_dir / "rag_index"
 
-    # Build all docs matching the pattern
+
     docs = build_recently_played_docs(raw_dir, pattern)
     if max_docs is not None:
         logger.info("Limiting to first %d documents", max_docs)
         docs = docs[:max_docs]
 
-    # Choose embedding backend
+
     if use_local:
         logger.info("Using local Sentence-Transformer embeddings (%s)", DEFAULT_LOCAL_EMBED)
         embed = SentenceTransformerEmbeddings(model_name=DEFAULT_LOCAL_EMBED)

@@ -1,6 +1,6 @@
 import sys, os
 
-# Insert the 'src' directory at the front of sys.path
+
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC_PATH     = os.path.join(PROJECT_ROOT, "src")
 sys.path.insert(0, SRC_PATH)

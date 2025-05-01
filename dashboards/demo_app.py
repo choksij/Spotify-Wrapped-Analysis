@@ -1,9 +1,6 @@
-# dashboards/demo_app.py
-
 import sys
 from pathlib import Path
 
-# ─── Bootstrap src/ on PYTHONPATH for Streamlit ─────────────────────────────
 project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root))
 
@@ -20,14 +17,14 @@ def main():
     st.title("Spotify Wrapped – Demo Modules")
 
     tabs = st.tabs([
-        "🎵 Genre Distribution",
-        "💥 Popularity Comparison",
-        "📝 Lyrics & Themes",
+        "Genre Distribution",
+        "Popularity Comparison",
+        "Lyrics & Themes",
     ])
 
-    root = get_project_root()  # your repo root
+    root = get_project_root()  
 
-    # ─── Tab 1: Genre Distribution ───────────────────────────────────────────
+    
     with tabs[0]:
         st.header("Genre Distribution Demo")
         genres_path = root / "data" / "raw" / "genres_v2" / "genres_v2.csv"
@@ -57,7 +54,7 @@ def main():
         )
         st.plotly_chart(fig2, use_container_width=True)
 
-    # ─── Tab 2: Popularity Comparison ─────────────────────────────────────────
+    
     with tabs[1]:
         st.header("High vs Low Popularity Demo")
 
@@ -104,7 +101,7 @@ def main():
             )
             st.plotly_chart(fig6, use_container_width=True)
 
-    # ─── Tab 3: Lyrics & Themes ───────────────────────────────────────────────
+    
     with tabs[2]:
         st.header("Lyrics & Topic Themes Demo")
         lyrics_path = root / "data" / "processed" / "lyrics_features.csv"
