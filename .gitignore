@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pytest cache
+.pytest_cache/
+
+# Log files
+*.log
+
+# macOS Finder files
+.DS_Store
+Thumbs.db
+
+# Spotipy OAuth token cache
+.spotify_token_cache
+
+# Ignore raw JSON API dumps (they can be large)
+data/raw/spotify_api/*.json
+
+# Docker Compose override (if you use one locally)
+docker-compose.override.yml
+

@@ -1,0 +1,18 @@
+# Core data & API
+pandas>=1.5.0
+numpy>=1.21.0
+spotipy>=2.25.1
+
+# Machine Learning & Modeling
+scikit-learn>=1.2.2
+statsmodels>=0.13.5
+joblib>=1.2.0
+
+# API & RAG
+fastapi>=0.90.0
+uvicorn>=0.22.0
+langchain>=0.0.170
+chromadb>=0.3.23
+openai>=0.27.0
+streamlit>=1.20.0
+plotly>=5.0.0

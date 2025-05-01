@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  # 1) Ingestion & API service
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: spotify-api
+    volumes:
+      - ./:/workspace:cached
+    working_dir: /workspace
+    ports:
+      - "8000:8000"
+    environment:
+      - SPOTIPY_CLIENT_ID=${SPOTIPY_CLIENT_ID}
+      - SPOTIPY_CLIENT_SECRET=${SPOTIPY_CLIENT_SECRET}
+      - SPOTIPY_REDIRECT_URI=${SPOTIPY_REDIRECT_URI}
+
+  # 2) Modeling & inference service
+  ml:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ml
+    container_name: spotify-ml
+    volumes:
+      - ./:/workspace:cached
+    working_dir: /workspace
+    ports:
+      - "5000:5000"
+    depends_on:
+      - api
+
+  # 3) Streamlit/Dash dashboard
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dash
+    container_name: spotify-dashboard
+    volumes:
+      - ./:/workspace:cached
+    working_dir: /workspace
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+      - ml

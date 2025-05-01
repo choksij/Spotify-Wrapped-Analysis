@@ -1,0 +1,11 @@
+# Dashboard-specific dependencies
+streamlit>=1.20.0
+plotly>=5.0.0
+pandas>=1.5.0
+
+# If you plan to run the RAG chat in the same container:
+fastapi>=0.90.0
+uvicorn>=0.22.0
+langchain>=0.0.170
+chromadb>=0.3.23
+openai>=0.27.0

@@ -1,0 +1,30 @@
+# docker/Dockerfile.api
+
+# 1) Base image
+FROM python:3.10-slim
+
+# 2) Set working directory
+WORKDIR /workspace
+
+# 3) Ensure stdout/stderr are unbuffered (logs appear immediately)
+ENV PYTHONUNBUFFERED=1
+
+# 4) Copy and install core dependencies + community extensions
+COPY requirements.txt /workspace/
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir langchain-community sentence-transformers chromadb
+
+# 5) Copy everything else (so scripts/, src/, data/ are present)
+COPY . /workspace
+
+# 6) Build & run the full data-pipeline (preprocess → features → models → index)
+RUN python scripts/run_data_pipeline.py \
+    --pattern recently_played_*.json \
+    --max_docs 50 \
+    --local_embeddings
+
+# 7) Expose FastAPI port
+EXPOSE 8000
+
+# 8) Default command: launch the RAG chat API
+CMD ["uvicorn", "src.rag_chat.chat_interface:app", "--host", "0.0.0.0", "--port", "8000"]

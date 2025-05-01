@@ -1,0 +1,23 @@
+{
+    // Use the workspace’s Python (inside the dev container)
+    "python.defaultInterpreterPath": "/usr/local/bin/python",
+    // Enable Pylance for fast type checking & IntelliSense
+    "python.languageServer": "Pylance",
+    // Make src/ discoverable without relative imports
+    "python.analysis.extraPaths": [
+        "./src"
+    ],
+    // Load environment variables from .env
+    "python.envFile": "${workspaceFolder}/.env",
+    // Hide generated folders
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "data/raw": true
+    },
+    // Auto–format on save with black/flake8 settings (if installed)
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Data Pipeline",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts/run_data_pipeline.py"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Launch Wrapped Dashboard",
+            "type": "shell",
+            "command": "streamlit",
+            "args": [
+                "run",
+                "dashboards/wrapped_app.py",
+                "--server.port=8501"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build & Start All Services",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "up",
+                "--build"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
