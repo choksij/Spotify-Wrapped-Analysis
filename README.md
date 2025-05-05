@@ -306,7 +306,10 @@ After ingesting the data, we run the following commands:
   ```bash
    http://127.0.0.1:8000/docs
   ```
--
+
+
+### Dashboards
+
   ```bash
   streamlit run dashboards/demo_app.py
   ```
@@ -319,3 +322,31 @@ After ingesting the data, we run the following commands:
   chmod +x scripts/run_dashboard.sh
   ./scripts/run_dashboard.sh
   ```
+<br>
+
+### Docker
+
+Spin up all services via Docker-Compose
+
+```bash
+docker-compose up --build -d
+```
+
+You'll get:
+- API service (FastAPI RAG chat) on http://localhost:8000
+- ML service (preprocessing → models → index) on http://localhost:5000
+- Dashboard (Streamlit) on http://localhost:8501
+
+
+To tail logs:
+```bash
+docker-compose logs -f
+```
+
+### Smoke Test
+Verify core imports and that your FastAPI app loads:
+
+```bash
+python smoke_test.py
+```
+
