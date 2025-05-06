@@ -1,2 +1,2 @@
-display_name,href,id,images,type,uri,external_urls.spotify,followers.href,followers.total
-Jeet,https://api.spotify.com/v1/users/31cny4wvswa3zmq25ccg6w2masi4,31cny4wvswa3zmq25ccg6w2masi4,[],user,spotify:user:31cny4wvswa3zmq25ccg6w2masi4,https://open.spotify.com/user/31cny4wvswa3zmq25ccg6w2masi4,,0
+country,display_name,href,id,images,product,type,uri,explicit_content.filter_enabled,explicit_content.filter_locked,external_urls.spotify,followers.href,followers.total
+US,Jeet,https://api.spotify.com/v1/users/31cny4wvswa3zmq25ccg6w2masi4,31cny4wvswa3zmq25ccg6w2masi4,[],free,user,spotify:user:31cny4wvswa3zmq25ccg6w2masi4,False,False,https://open.spotify.com/user/31cny4wvswa3zmq25ccg6w2masi4,,0
